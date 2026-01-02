@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { loginSuccess } from '../app/features/auth/authSlice'
 
 const Login = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [isLogin, setIsLogin] = useState(true)
     const [formData, setFormData] = useState({
         fullName: '',
@@ -13,8 +16,18 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log('Form submitted:', formData)
+
+        const displayName = formData.fullName || formData.email.split('@')[0] || 'User'
+
+        const user = {
+            fullName: displayName,
+            email: formData.email,
+            password: formData.password
+        }
+        dispatch(loginSuccess(user))
         navigate('/product-list')
     }
+
 
     return (
         <div className='min-h-screen flex bg-zinc-900 items-center justify-center p-6 text-gray-900'>

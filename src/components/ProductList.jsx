@@ -1,9 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../app/features/auth/authSlice';
 
 const ProductList = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [showDetails, setShowDetails] = useState(false)
     const [cartCount, setCartCount] = useState(0);
+    const { user } = useSelector((state) => state.auth);
+
+    useEffect(() => {
+        if (!user) {
+            navigate('/')
+        }
+    }, [user, navigate])
+
+    const handlelogout = () => {
+        dispatch(logout());
+        navigate('/');
+    }
+    const handleShowDetails = () => {
+        setShowDetails(!showDetails)
+
+    }
     const products = [
         {
             id: 1,
@@ -34,6 +54,9 @@ const ProductList = () => {
             image: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&q=80&w=400",
         },
     ];
+
+    if (!user) return null;
+
     return (
         <div className='min-h-screen bg-white text-zinc-900 p-8'>
             <nav className="border-b border-gray-100 sticky top-0 bg-white z-50">
@@ -42,37 +65,41 @@ const ProductList = () => {
                         Tarmeya
                     </h1>
                     <div className="flex items-center gap-6">
-
-                        <span className="text-sm font-bold text-zinc-900">Hello,</span>
-
-
+                        <span className="text-sm font-bold text-zinc-900">Hello, {user?.fullName || 'Guest'}</span>
                         <button className="text-sm font-medium hover:text-purple-600">All Products</button>
                         <div className="relative cursor-pointer" onClick={() => navigate("/cart")}>
                             <span className="text-sm font-medium">Cart ({cartCount})</span>
                         </div>
+                        <button className="text-sm font-medium hover:text-purple-600" onClick={handlelogout}>Logout</button>
                     </div>
                 </div>
             </nav>
             <header>
                 <div className="max-w-6xl mx-auto px-7 py-7">
-
                     <h1 className="text-3xl font-bold tracking-tight">Our Products</h1>
                     <p className="text-sm text-gray-500 mt-2 max-w-lg">
                         Carefully curated skincare essentials for your daily routine.<br /> Clean, effective, and simple.
                     </p>
                 </div>
-
             </header>
             <main className="max-w-6xl mx-auto px-7 pb-28">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {products.map((product) => (
                         <div key={product.id} className="group">
-                            <div className="aspect-[3/4] overflow-hidden rounded-xl bg-gray-50 mb-4">
+                            <div className="aspect-[3/4] overflow-hidden rounded-xl bg-gray-50 mb-4 relative">
                                 <img
                                     src={product.image}
                                     alt={product.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
+
+                                {/* Button ON image */}
+                                <button
+                                    onClick={handleShowDetails}
+                                    className="absolute bottom-2 left-2 bg-white border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white px-3 py-1 rounded text-sm shadow"
+                                >
+                                    More Details
+                                </button>
                             </div>
                             <div className="space-y-1">
                                 <h3 className="font-semibold text-gray-900 leading-tight">
@@ -91,14 +118,11 @@ const ProductList = () => {
                     ))}
                 </div>
             </main>
-            <div>
-                <footer className='max-w-6xl mx-auto  justify-center  text-center px-6 py-6'>
-                    <p className="text-xs text-gray-400 font-medium tracking-widest uppercase">
-                        &copy; 2024 SHOP. All Rights Reserved.
-                    </p>
-                </footer>
-            </div>
-
+            <footer className='max-w-6xl mx-auto justify-center text-center px-6 py-6'>
+                <p className="text-xs text-gray-400 font-medium tracking-widest uppercase">
+                    &copy; 2024 SHOP. All Rights Reserved.
+                </p>
+            </footer>
         </div>
     )
 }
