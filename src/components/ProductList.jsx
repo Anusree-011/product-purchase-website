@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../app/features/auth/authSlice';
+import { addToCart } from '../app/features/cart/cartSlice';
+import Navbar from './Navbar';
+
 
 const ProductList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [selectedProduct, setSelectedProduct] = useState(null)
-    const [cartCount, setCartCount] = useState(0);
     const { user } = useSelector((state) => state.auth);
 
     useEffect(() => {
@@ -63,22 +65,8 @@ const ProductList = () => {
     if (!user) return null;
 
     return (
-        <div className='min-h-screen bg-white text-zinc-900 p-8'>
-            <nav className="border-b border-gray-100 sticky top-0 bg-white z-50">
-                <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <h1 className="text-xl font-bold tracking-tight cursor-pointer" onClick={() => navigate("/")}>
-                        Tarmeya
-                    </h1>
-                    <div className="flex items-center gap-6">
-                        <span className="text-sm font-bold text-zinc-900">Hello, {user?.fullName || 'Guest'}</span>
-                        <button className="text-sm font-medium hover:text-purple-600">All Products</button>
-                        <div className="relative cursor-pointer" onClick={() => navigate("/cart")}>
-                            <span className="text-sm font-medium">Cart ({cartCount})</span>
-                        </div>
-                        <button className="text-sm font-medium hover:text-purple-600" onClick={handlelogout}>Logout</button>
-                    </div>
-                </div>
-            </nav>
+        <div className='min-h-screen bg-white text-zinc-900'>
+            <Navbar />
             <header>
                 <div className="max-w-6xl mx-auto px-7 py-7">
                     <h1 className="text-3xl font-bold tracking-tight">Our Products</h1>
@@ -101,7 +89,7 @@ const ProductList = () => {
                                 {/* Button ON image */}
                                 <button
                                     onClick={() => handleShowDetails(product)}
-                                    className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white px-3 py-1 rounded-lg text-sm transition-all shadow-sm"
+                                    className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white px-3 py-1 rounded-lg text-sm transition-all shadow-sm cursor-pointer cursor-pointer"
                                 >
                                     More Details
                                 </button>
@@ -113,8 +101,8 @@ const ProductList = () => {
                                 <p className="text-sm text-gray-500">{product.desc}</p>
                                 <p className="text-sm font-bold text-gray-900 pt-1">${product.price}</p>
                                 <button
-                                    onClick={() => setCartCount(prev => prev + 1)}
-                                    className="w-full mt-4 bg-gray-900 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-gray-800 transition"
+                                    onClick={() => dispatch(addToCart(product))}
+                                    className="w-full mt-4 bg-gray-900 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-gray-800 transition cursor-pointer"
                                 >
                                     Add to Cart
                                 </button>
@@ -124,16 +112,16 @@ const ProductList = () => {
                 </div>
             </main>
 
-            {/* Product Details Modal */}
+
             {selectedProduct && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    {/* Backdrop */}
+
                     <div
                         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
                         onClick={closeDetails}
                     ></div>
 
-                    {/* Modal Content */}
+
                     <div className="relative bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in duration-300">
                         <button
                             onClick={closeDetails}
@@ -173,10 +161,10 @@ const ProductList = () => {
 
                             <button
                                 onClick={() => {
-                                    setCartCount(prev => prev + 1)
+                                    dispatch(addToCart(selectedProduct))
                                     closeDetails()
                                 }}
-                                className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold hover:bg-gray-800 transition shadow-xl shadow-gray-200"
+                                className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold hover:bg-gray-800 transition shadow-xl shadow-gray-200 cursor-pointer"
                             >
                                 Add to Cart
                             </button>
