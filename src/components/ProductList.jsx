@@ -6,7 +6,7 @@ import { logout } from '../app/features/auth/authSlice';
 const ProductList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [showDetails, setShowDetails] = useState(false)
+    const [selectedProduct, setSelectedProduct] = useState(null)
     const [cartCount, setCartCount] = useState(0);
     const { user } = useSelector((state) => state.auth);
 
@@ -20,10 +20,15 @@ const ProductList = () => {
         dispatch(logout());
         navigate('/');
     }
-    const handleShowDetails = () => {
-        setShowDetails(!showDetails)
 
+    const handleShowDetails = (product) => {
+        setSelectedProduct(product)
     }
+
+    const closeDetails = () => {
+        setSelectedProduct(null)
+    }
+
     const products = [
         {
             id: 1,
@@ -95,8 +100,8 @@ const ProductList = () => {
 
                                 {/* Button ON image */}
                                 <button
-                                    onClick={handleShowDetails}
-                                    className="absolute bottom-2 left-2 bg-white border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white px-3 py-1 rounded text-sm shadow"
+                                    onClick={() => handleShowDetails(product)}
+                                    className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm border border-gray-200 hover:border-gray-900 hover:bg-gray-900 hover:text-white px-3 py-1 rounded-lg text-sm transition-all shadow-sm"
                                 >
                                     More Details
                                 </button>
@@ -118,6 +123,68 @@ const ProductList = () => {
                     ))}
                 </div>
             </main>
+
+            {/* Product Details Modal */}
+            {selectedProduct && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <div
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                        onClick={closeDetails}
+                    ></div>
+
+                    {/* Modal Content */}
+                    <div className="relative bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in duration-300">
+                        <button
+                            onClick={closeDetails}
+                            className="absolute top-4 right-4 z-10 bg-white shadow-md rounded-full p-2 hover:bg-gray-100 transition"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        <div className="md:w-1/2 aspect-[4/5] md:aspect-auto">
+                            <img
+                                src={selectedProduct.image}
+                                alt={selectedProduct.name}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        <div className="md:w-1/2 p-8 flex flex-col justify-center">
+                            <div className="mb-6">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedProduct.name}</h2>
+                                <p className="text-purple-600 font-medium text-sm mb-4">{selectedProduct.desc}</p>
+                                <div className="text-3xl font-bold text-gray-900 mb-6">${selectedProduct.price}</div>
+
+                                <div className="space-y-4">
+                                    <p className="text-gray-600 text-sm leading-relaxed">
+                                        Experience the ultimate hydration with our premium {selectedProduct.name}.
+                                        Formulated with clean ingredients to nourish and protect your skin daily.
+                                    </p>
+                                    <ul className="text-xs text-gray-500 space-y-2 list-disc pl-4">
+                                        <li>Dermatologist tested</li>
+                                        <li>Clean and vegan formula</li>
+                                        <li>Suitable for all skin types</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => {
+                                    setCartCount(prev => prev + 1)
+                                    closeDetails()
+                                }}
+                                className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold hover:bg-gray-800 transition shadow-xl shadow-gray-200"
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <footer className='max-w-6xl mx-auto justify-center text-center px-6 py-6'>
                 <p className="text-xs text-gray-400 font-medium tracking-widest uppercase">
                     &copy; 2024 SHOP. All Rights Reserved.
