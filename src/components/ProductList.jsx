@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const ProductList = () => {
     const navigate = useNavigate();
+    const [cartCount, setCartCount] = useState(0);
     const products = [
         {
             id: 1,
@@ -47,13 +48,13 @@ const ProductList = () => {
 
                         <button className="text-sm font-medium hover:text-purple-600">All Products</button>
                         <div className="relative cursor-pointer" onClick={() => navigate("/cart")}>
-                            <span className="text-sm font-medium">Cart </span>
+                            <span className="text-sm font-medium">Cart ({cartCount})</span>
                         </div>
                     </div>
                 </div>
             </nav>
             <header>
-                <div className="max-w-6xl mx-auto px-6 py-6">
+                <div className="max-w-6xl mx-auto px-7 py-7">
 
                     <h1 className="text-3xl font-bold tracking-tight">Our Products</h1>
                     <p className="text-sm text-gray-500 mt-2 max-w-lg">
@@ -62,7 +63,7 @@ const ProductList = () => {
                 </div>
 
             </header>
-            <main className="max-w-6xl mx-auto px-6 pb-24">
+            <main className="max-w-6xl mx-auto px-7 pb-28">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {products.map((product) => (
                         <div key={product.id} className="group">
