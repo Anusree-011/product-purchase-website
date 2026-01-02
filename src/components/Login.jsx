@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
+    const navigate = useNavigate()
     const [isLogin, setIsLogin] = useState(true)
     const [formData, setFormData] = useState({
         fullName: '',
@@ -11,6 +13,7 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log('Form submitted:', formData)
+        navigate('/product-list')
     }
 
     return (
