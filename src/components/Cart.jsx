@@ -107,7 +107,41 @@ const Cart = () => {
                             ))}
                         </div>
 
+                        {/* Order Summary */}
+                        <div className="lg:w-[400px]">
+                            <div className="bg-zinc-900 text-white rounded-[2rem] p-10 lg:sticky lg:top-24 shadow-2xl shadow-zinc-200">
+                                <h3 className="text-2xl font-bold mb-8">Summary</h3>
 
+                                <div className="space-y-5 mb-10 overflow-hidden">
+                                    <div className="flex justify-between items-center text-zinc-400 font-medium">
+                                        <span>Subtotal</span>
+                                        <span className="text-white">${subtotal}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-zinc-400 font-medium">
+                                        <span>Shipping</span>
+                                        <span className="text-white">
+                                            {shipping === 0 ? "Complimentary" : `$${shipping}`}
+                                        </span>
+                                    </div>
+                                    <div className="h-px bg-zinc-800 my-2"></div>
+                                    <div className="flex justify-between items-end">
+                                        <span className="text-lg font-medium">Total</span>
+                                        <span className="text-3xl font-bold tracking-tighter">${total}</span>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => navigate('/place-order')}
+                                    className="w-full bg-white text-zinc-900 py-5 rounded-2xl font-bold text-base hover:bg-zinc-100 transition shadow-lg active:scale-[0.98]"
+                                >
+                                    Proceed to Checkout
+                                </button>
+
+                                <p className="text-center text-[10px] text-zinc-500 uppercase tracking-widest font-bold mt-8">
+                                    Secure Checkout Guaranteed
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-32 text-center">
