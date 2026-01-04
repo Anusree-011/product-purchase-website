@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../app/features/auth/authSlice';
 import { addToCart } from '../app/features/cart/cartSlice';
 import Navbar from './Navbar';
 
@@ -18,10 +17,7 @@ const ProductList = () => {
         }
     }, [user, navigate])
 
-    const handlelogout = () => {
-        dispatch(logout());
-        navigate('/');
-    }
+
 
     const handleShowDetails = (product) => {
         setSelectedProduct(product)
